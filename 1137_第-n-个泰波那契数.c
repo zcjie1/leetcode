@@ -49,23 +49,51 @@
 
 // @lc code=start
 
+typedef struct Matrix {
+    long mat[3][3];
+}Matrix;
+
+Matrix multiply(Matrix *a, Matrix *b) {
+    struct Matrix c;
+    long c00, c11, c22;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            c00 = a->mat[i][0] * b->mat[0][j];
+            c11 = a->mat[i][1] * b->mat[1][j];
+            c22 = a->mat[i][2] * b->mat[2][j];
+            c.mat[i][j] = c00 + c11 + c22;
+        }
+    }
+    return c;
+}
+
+Matrix qpow(Matrix *a, int n) {
+    Matrix ret = {{
+        {1, 0, 0}, 
+        {0, 1, 0}, 
+        {0, 0, 1}
+    }};
+    while(n > 0) {
+        if(n & 1)
+            ret = multiply(&ret, a);
+        n = n >> 1;
+        *a = multiply(a, a);
+    }
+    return ret;
+}
+
 
 int tribonacci(int n){
     if(n < 1)
         return 0;
-    if(n <= 2)
-        return 1;
-    int a = 0, b = 1, c = 1;
-    int sum = 2;
+    Matrix m = {{
+        {1, 1, 1},
+        {1, 0, 0},
+        {0, 1, 0}
+    }};
 
-    for(int i=3; i<n; i++){
-        a = b;
-        b = c;
-        c = sum;
-        sum = a + b + c;
-    }
-
-    return sum;
+    Matrix ret = qpow(&m, n);
+    return ret.mat[2][0] + ret.mat[2][1];
 }
 // @lc code=end
 
