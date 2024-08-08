@@ -65,11 +65,6 @@
 #include <stdbool.h>
 
 bool isPalindrome(int x) {
-    int num[32];
-    int count = 0;
-    int curr = 0;
-    int left, right;
-
     if(x < 0)
         return false;
     
@@ -78,25 +73,26 @@ bool isPalindrome(int x) {
     
     if(!(x % 10))
         return false;
+    
+    int curr = 0;
+    int tmp = 0;
 
-    while(x) {
-        curr = x % 10;
-        num[count++] = curr;
+    while(curr < x) {
+        tmp = x % 10;
+        curr = curr * 10 + tmp;
         x = x / 10;
     }
 
-    left = 0;
-    right = count-1;
+    if(curr == x)
+        return true;
+    
+    tmp = curr % 10;
+    x = x * 10 + tmp;
+    if (curr == x)
+        return true;
+    
+    return false;
 
-    while(left < right) {
-        if(num[left] == num[right]) {
-            left++;
-            right--;
-            continue;
-        }
-        return false;
-    }
-    return true;
 }
 // @lc code=end
 
