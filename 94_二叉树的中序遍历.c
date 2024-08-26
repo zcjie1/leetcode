@@ -79,19 +79,33 @@ struct TreeNode {
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
-void inorder(struct TreeNode* root, int* res, int* resSize) {
-    if (root==NULL)
-        return;
-    inorder(root->left, res, resSize);
-    res[(*resSize)++] = root->val;
-    inorder(root->right, res, resSize);
-}
 
 int* inorderTraversal(struct TreeNode* root, int* returnSize) {
-    int* res = malloc(sizeof(int) * 101);
+    int* ans = (int *)malloc(sizeof(int) * 101);
     *returnSize = 0;
-    inorder(root, res, returnSize);
-    return res;
+
+    struct TreeNode *stk[101];
+    int top = 0;
+    
+    struct TreeNode *curr = root;
+
+    while(curr || top > 0) {
+        while(top > 0 && !curr) {
+            curr = stk[--top];
+            ans[(*returnSize)++] = curr->val;
+            curr = curr->right;
+        }
+
+        if(!curr)
+            break;
+
+        stk[top++] = curr;
+        curr = curr->left;
+
+    }
+
+    return ans;
+
 }
 // @lc code=end
 
